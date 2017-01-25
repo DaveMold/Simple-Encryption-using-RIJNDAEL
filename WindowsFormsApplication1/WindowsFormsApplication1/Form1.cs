@@ -15,20 +15,21 @@ namespace WindowsFormsApplication1
     {
         //Public Vairbles
         byte encryptionTranslation = 4; //The amount the Ascii value is shifted by in the encrytion and decryption methods.
-        int keySize = 128; //This stores the size of key required for the AES algorithims. The default values is the lowest bite value the key size can be set to.
+        int keySizebit = 128; //This stores the size of key required for the AES algorithims. The default values is the lowest bite value the key size can be set to.
         string defaultInputTxt = "Please Enter the text you would like to encrypt..."; //The text that should be displayed to tell the user what they must do when starting the program.
-        string defaultKeyTxt = "16 characters"; //The text that should be displayed to tell the user the lenght of the key required for AES.
+        string defaultAESKeyTxt = " characters"; //The text that should be displayed to tell the user the lenght of the key required for AES.
+        string defaultBasicKeyTxt = "No key is required."; //This is the text that will be displayed if there is no key required for the algorithim. eg Basic encryption.
         byte[] chipherBytes; //This will be used to store the data we have encrypted.
         byte[] plainbytes; //This will be used to store the plain text data. eg readable data.
-        enum Encrption_type { AES, RIJNDAEL }; //This enum will be used to toggle the encryption type that should be used by the system to encrypt your data.
-        Encrption_type encrypt_typ = Encrption_type.RIJNDAEL; //inisalises the vairble that will store which of the encryption types should be used.
+        enum Encrption_type { BASIC, RIJNDAEL }; //This enum will be used to toggle the encryption type that should be used by the system to encrypt your data.
+        Encrption_type encrypt_typ = Encrption_type.BASIC; //inisalises the vairble that will store which of the encryption types should be used.
         SymmetricAlgorithm desObj;
 
         public Form1()
         {
             InitializeComponent();
             desObj = Rijndael.Create();
-            desObj.KeySize = keySize; //Sets the key size that the AES algorithims will expect when encrypting or decrypting data.
+            desObj.KeySize = keySizebit; //Sets the key size that the AES algorithims will expect when encrypting or decrypting data.
             desObj.Mode = CipherMode.CBC; /*This type of encryption will insure that even if the text contains to of the same letters 
             beside each other it will still be encrypted as to values in the end to prevent a hit to the data contained for a malious attack. */
             desObj.Padding = PaddingMode.Zeros; //This will pad the data with "0" until the data can be stored as multiples of 16.
@@ -36,7 +37,9 @@ namespace WindowsFormsApplication1
             this.Controls.Add(rtb_input);
             rtb_input.KeyPress += new KeyPressEventHandler(richTextBox1_KeyDown);
             rtb_input.Text = defaultInputTxt; //Sets the default value for the input text box on launch.
-            txtB_key.Text = defaultKeyTxt; //Sets the default value for the key text box on launch.
+            txtB_key.Text = defaultBasicKeyTxt; //Sets the default value for the key text box on launch.
+            numUpDown_KeySize.Enabled = false; /*As there is no need to set a key with the Basic encryption, the number up down txt box can be
+            disabled until the user selects AES encryption.*/
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -129,9 +132,9 @@ namespace WindowsFormsApplication1
          * result in errors when trying to decrypt the corupted data.*/
         private string performRIJNDAELEncryption(string s, string k)
         {
-            if (k.Length < keySize/8)
+            if (k.Length < keySizebit/8)
             {
-                MessageBox.Show("Please insure your Key is " + keySize/8 + " charters long");
+                MessageBox.Show("Please insure your Key is " + keySizebit/8 + " charters long");
                 return "";
             }
             //Stores the text to be encrypted as well as the key provided as Ascii values.
@@ -192,9 +195,9 @@ namespace WindowsFormsApplication1
          * will give information on the error instead of crashing the program.*/
         private string performRIJNDAELDecryption(string s, string k)
         {
-            if (k.Length < keySize/8)
+            if (k.Length < keySizebit/8)
             {
-                MessageBox.Show("Please insure your Key is " + keySize/8 + " charters long");
+                MessageBox.Show("Please insure your Key is " + keySizebit/8 + " charters long");
                 return "";
             }
             //Stores the text to be decrypted as well as the key provided as Ascii values.
@@ -229,10 +232,10 @@ namespace WindowsFormsApplication1
             rtb_output.Clear(); //Clears the output text box before populating it with a new string of the encrypted text.
             switch (encrypt_typ)
             {
-                case Encrption_type.AES:
+                case Encrption_type.RIJNDAEL:
                     rtb_output.Text += performRIJNDAELEncryption(rtb_input.Text, txtB_key.Text);
                     break;
-                case Encrption_type.RIJNDAEL:
+                case Encrption_type.BASIC:
                     rtb_output.Text += performBasicEncryption(rtb_input.Text);
                     break;
             }
@@ -244,10 +247,10 @@ namespace WindowsFormsApplication1
             rtb_output.Clear(); //Clears the output text box before populating it with a new string of the decrypted text.
             switch (encrypt_typ)
             {
-                case Encrption_type.AES:
+                case Encrption_type.RIJNDAEL:
                     rtb_output.Text += performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text);
                     break;
-                case Encrption_type.RIJNDAEL:
+                case Encrption_type.BASIC:
                     rtb_output.Text += performBasicDecryption(rtb_input.Text);
                     break;
             }
@@ -257,8 +260,8 @@ namespace WindowsFormsApplication1
         private void bt_resetTxtb_Click(object sender, EventArgs e)
         {
             rtb_input.Clear(); //Clears the input text box of any text when the reset butten is clicked.
-            if (encrypt_typ == Encrption_type.AES)
-                txtB_key.Clear(); //Clears the key text box of any text when the reset butten is clicked.
+            if (encrypt_typ == Encrption_type.RIJNDAEL)
+                txtB_key.Clear(); //Clears the key text box of any text when the clear text butten is clicked.
         }
 
         private void txtB_key_TextChanged(object sender, EventArgs e)
@@ -267,14 +270,26 @@ namespace WindowsFormsApplication1
 
         private void radbtn_basicEncrypt_CheckedChanged(object sender, EventArgs e)
         {
+            /*With the Basic encryption there is no need for a key the number up down text box
+             * therefore this can be disabled, as well as the key text box. The default key text
+             * that explains the requirements of the key can be set to the keys text boxs text.*/
+            numUpDown_KeySize.Enabled = false;
             txtB_key.ReadOnly = true;
-            encrypt_typ = Encrption_type.RIJNDAEL;
+            txtB_key.Text = defaultBasicKeyTxt;
+            encrypt_typ = Encrption_type.BASIC;
         }
 
         private void radbtn_AesEncryt_CheckedChanged(object sender, EventArgs e)
         {
+            /*With the Rijndael encryption a key is required so the key text box should be
+             * enabled as well as the number up down text box for selecting the key lenght.
+             * The key text feild is also set the have a discriptive value for what the size
+             * of the key required will be until the user enters his or her key.*/
+            numUpDown_KeySize.Enabled = true;
             txtB_key.ReadOnly = false;
-            encrypt_typ = Encrption_type.AES;
+            //In order to convert the key size from bits to an int value we must devied the value by 8.
+            txtB_key.Text = (keySizebit/8) + defaultAESKeyTxt;
+            encrypt_typ = Encrption_type.RIJNDAEL;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -310,15 +325,19 @@ namespace WindowsFormsApplication1
         * if the two values differ then set the number up down box value to the new key size.*/
         private void numUpDown_KeySize_ValueChanged(object sender, EventArgs e)
         {
-            if (numUpDown_KeySize.Value * 8 != keySize)
-                setKeySize(numUpDown_KeySize.Value);
+            if (encrypt_typ == Encrption_type.RIJNDAEL)
+            {
+                if (numUpDown_KeySize.Value * 8 != keySizebit)
+                    setKeySize(numUpDown_KeySize.Value);
+                txtB_key.Text = (keySizebit / 8) + defaultAESKeyTxt;
+            }
         }
 
         /*When passed a value for the amount of charters it will multiply the value by 8 in order to get the bit
         * value and assign it to the key size. */
         private void setKeySize(decimal n)
         {
-            keySize = Convert.ToInt32(8 * n);
+            keySizebit = Convert.ToInt32(8 * n);
             txtB_key.MaxLength = Convert.ToInt32(n);
         }
     }
