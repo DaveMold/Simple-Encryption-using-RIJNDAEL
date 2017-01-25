@@ -129,7 +129,7 @@
             this.txtB_key.ReadOnly = true;
             this.txtB_key.Size = new System.Drawing.Size(124, 22);
             this.txtB_key.TabIndex = 7;
-            this.txtB_key.Text = "16 characters";
+            this.txtB_key.Text = "No key is required";
             this.txtB_key.TextChanged += new System.EventHandler(this.txtB_key_TextChanged);
             // 
             // lb_Key
