@@ -44,8 +44,10 @@
             this.lb_KeySize = new System.Windows.Forms.Label();
             this.lb_DataType = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.radbn_txtData = new System.Windows.Forms.RadioButton();
             this.radbn_fileData = new System.Windows.Forms.RadioButton();
+            this.radbn_txtData = new System.Windows.Forms.RadioButton();
+            this.bn_BrousePath = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDown_KeySize)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -244,6 +246,19 @@
             this.panel1.Size = new System.Drawing.Size(154, 22);
             this.panel1.TabIndex = 15;
             // 
+            // radbn_fileData
+            // 
+            this.radbn_fileData.AutoSize = true;
+            this.radbn_fileData.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radbn_fileData.Location = new System.Drawing.Point(69, 3);
+            this.radbn_fileData.Name = "radbn_fileData";
+            this.radbn_fileData.Size = new System.Drawing.Size(55, 21);
+            this.radbn_fileData.TabIndex = 1;
+            this.radbn_fileData.TabStop = true;
+            this.radbn_fileData.Text = "File";
+            this.radbn_fileData.UseVisualStyleBackColor = true;
+            this.radbn_fileData.CheckedChanged += new System.EventHandler(this.radbn_fileData_CheckedChanged);
+            // 
             // radbn_txtData
             // 
             this.radbn_txtData.AutoSize = true;
@@ -258,18 +273,21 @@
             this.radbn_txtData.UseVisualStyleBackColor = true;
             this.radbn_txtData.CheckedChanged += new System.EventHandler(this.radbn_txtData_CheckedChanged);
             // 
-            // radbn_fileData
+            // bn_BrousePath
             // 
-            this.radbn_fileData.AutoSize = true;
-            this.radbn_fileData.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radbn_fileData.Location = new System.Drawing.Point(69, 3);
-            this.radbn_fileData.Name = "radbn_fileData";
-            this.radbn_fileData.Size = new System.Drawing.Size(55, 21);
-            this.radbn_fileData.TabIndex = 1;
-            this.radbn_fileData.TabStop = true;
-            this.radbn_fileData.Text = "File";
-            this.radbn_fileData.UseVisualStyleBackColor = true;
-            this.radbn_fileData.CheckedChanged += new System.EventHandler(this.radbn_fileData_CheckedChanged);
+            this.bn_BrousePath.Location = new System.Drawing.Point(347, 94);
+            this.bn_BrousePath.Name = "bn_BrousePath";
+            this.bn_BrousePath.Size = new System.Drawing.Size(75, 23);
+            this.bn_BrousePath.TabIndex = 16;
+            this.bn_BrousePath.Text = "Brouse";
+            this.bn_BrousePath.UseVisualStyleBackColor = true;
+            this.bn_BrousePath.Visible = false;
+            this.bn_BrousePath.Click += new System.EventHandler(this.bn_BrousePath_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // Form1
             // 
@@ -277,6 +295,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumPurple;
             this.ClientSize = new System.Drawing.Size(434, 285);
+            this.Controls.Add(this.bn_BrousePath);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lb_DataType);
             this.Controls.Add(this.lb_KeySize);
@@ -326,6 +345,8 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RadioButton radbn_fileData;
         private System.Windows.Forms.RadioButton radbn_txtData;
+        private System.Windows.Forms.Button bn_BrousePath;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

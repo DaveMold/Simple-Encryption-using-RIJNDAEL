@@ -538,14 +538,26 @@ namespace WindowsFormsApplication1
 
         private void radbn_txtData_CheckedChanged(object sender, EventArgs e)
         {
+            bn_BrousePath.Visible = false;
             rtb_input.Text = defaultInputTxtForTxt;
             dataTypeForEncrypt = Data_Type.TEXT;
         }
 
         private void radbn_fileData_CheckedChanged(object sender, EventArgs e)
         {
+            bn_BrousePath.Visible = true;
             rtb_input.Text = defaultInputTxtForFile;
             dataTypeForEncrypt = Data_Type.FILE;
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            rtb_input.Text = openFileDialog1.InitialDirectory + openFileDialog1.FileName;
+        }
+
+        private void bn_BrousePath_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
         }
     }
 }
