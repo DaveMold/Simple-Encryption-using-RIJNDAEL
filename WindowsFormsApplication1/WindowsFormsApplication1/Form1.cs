@@ -23,6 +23,7 @@ namespace WindowsFormsApplication1
         string defaultBasicKeyTxt = "No key is required."; //This is the text that will be displayed if there is no key required for the algorithim. eg Basic encryption.
         byte[] chipherBytes; //This will be used to store the data we have encrypted.
         byte[] plainbytes; //This will be used to store the plain text data. eg readable data.
+        string path = ""; //inisalises the path vairable for the encryption of a file.
         enum Encrption_type { BASIC, RIJNDAEL }; //This enum will be used to toggle the encryption type that should be used by the system to encrypt your data.
         Encrption_type encrypt_typ = Encrption_type.BASIC; //inisalises the vairble that will store which of the encryption types should be used.
         enum Data_Type { TEXT, FILE }; //This will be used to toggle between encrypting files or raw text.
@@ -84,7 +85,6 @@ namespace WindowsFormsApplication1
         * As well as checking for a valid path for the file that is to be encrypted.*/
         private string performBasicEncryption(string s)
         {
-            string path = ""; //inisalises the path vairable.
             List<byte> b = new List<byte>(); /*Creates a byte list for use to store the data for encryption. The reason
             I require a list is that a vaible for use through out this method is needed but as I do not know the size of
             the data I will have is not clear at this point so a list will allow me to change the size of the array as I need it.*/
@@ -130,13 +130,14 @@ namespace WindowsFormsApplication1
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Please enter a valid file path.");
+                            MessageBox.Show("Please enter a valid file path or insure the path is pointing to the correct file.");
                             return "";
                         }
                     }
                     break;
             }
 
+            //Switch used to check the type of data being encrypted, data can be a text string or a path to a file.
             switch (dataTypeForEncrypt)
             {
                 case Data_Type.TEXT:
@@ -179,12 +180,13 @@ namespace WindowsFormsApplication1
             return s;
         }
 
-        /*Performing AES encryption of a sting using a key also provided to the metode.
+        /*Performing AES encryption of a sting or file at a path provided using a key also provided to the metode.
          * The first step is to check the key and insure that the value provided is 
          * not less than 16 charters in lenght. As the text box the key is taken from
          * will not allow the user to input more than 16 charters there is no need to 
          * check if the user has entered more than 16 charters.
-         * The next step will be for the string of plain text and key to be convered to ascii.
+         * The next step will be for the string of plain text or the the data read from the file
+         * and key to be convered to ascii.
          * Next the memory stream that will store our result is inisalised for use as well
          * as the crypto stream that will perform the encryption using the symmetrical algorthm
          * object that has been created with the type of encryption as well as the key
@@ -193,7 +195,9 @@ namespace WindowsFormsApplication1
          * the data is not converted to Hex then the data will be compramised when it
          * is output in the text box because not all ascii values when convered back
          *  to a string can be displayed in a text box. This will corupt the data and 
-         * result in errors when trying to decrypt the corupted data.*/
+         * result in errors when trying to decrypt the corupted data.
+         * If the file encryption is used the data will be writen back to the file
+         * and a result message will be displaied to the user.*/
         private string performRIJNDAELEncryption(string s, string k)
         {
             if (k.Length < keySizebit/8)
@@ -201,8 +205,29 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Please insure your Key is " + keySizebit/8 + " charters long");
                 return "";
             }
-            //Stores the text to be encrypted as well as the key provided as Ascii values.
-            plainbytes = Encoding.ASCII.GetBytes(s);
+
+            //Switch used to check the type of data being encrypted, data can be a text string or a path to a file.
+            switch (dataTypeForEncrypt)
+            {
+                case Data_Type.TEXT:
+                    plainbytes = Encoding.ASCII.GetBytes(s);
+                    break;
+                case Data_Type.FILE:
+                    path = s;
+                    try
+                    {
+                        plainbytes = File.ReadAllBytes(path); /*Reads the data as bytes to an array from the file of the path
+                        * provided.*/
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Please enter a valid file path or insure the path is pointing to the correct file.");
+                        return "";
+                    }
+                    break;
+            }
+
+            //Stores the key provided as Ascii values.
             desObj.Key = Encoding.ASCII.GetBytes(k);
 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
@@ -212,7 +237,18 @@ namespace WindowsFormsApplication1
             chipherBytes = ms.ToArray();
             ms.Close();
 
-            s = ByteArrayToString(chipherBytes);
+            //Switch used to check the type of data being encrypted, data can be a text string or a path to a file.
+            switch (dataTypeForEncrypt)
+            {
+                case Data_Type.TEXT:
+                    s = ByteArrayToString(chipherBytes); //Converts the bytes result to a string and returns it as the result.
+                    break;
+                case Data_Type.FILE:
+                    File.WriteAllBytes(path, chipherBytes);
+                    s = "File encrypted."; //shows to the user that there file has been encrypted.
+                    break;
+            }
+           
             return s;
         }
 
@@ -232,6 +268,7 @@ namespace WindowsFormsApplication1
             * array needed is unclear, but the vairble will be required throughout the method.*/
             string path = "";
 
+            //Switch used to check the type of data being decrypted, data can be a text string or a path to a file.
             switch (dataTypeForEncrypt)
             {
                 case Data_Type.TEXT:
@@ -266,6 +303,7 @@ namespace WindowsFormsApplication1
                     break;
             }
 
+            //Switch used to check the type of data being decrypted, data can be a text string or a path to a file.
             switch (dataTypeForEncrypt)
             {
                 case Data_Type.TEXT:
@@ -310,8 +348,8 @@ namespace WindowsFormsApplication1
             return s;
         }
 
-        /*Performs AES decryption to an encrypted string using the key that is passed to the method.
-         * It will first check that the key the user has passed meets the requirements of the algorithim,
+        /*Performs AES decryption to an encrypted string or file at a given path using the key that is 
+         * passed to the method. It will first check that the key the user has passed meets the requirements of the algorithim,
          * using the AES encryption will require the use of a key that is 16 charters in lenght. 
          * If the user enters a key that is less than 16 charters in lenght they will given an error message
          * shown as a message box requesting that they increase the key size. The metode will also return
@@ -321,7 +359,8 @@ namespace WindowsFormsApplication1
          * data to HEX and out put it as a string. This means that during the decryption of the data I must convert
          * the data back to ascii in order to perform the decryption. To pervent this from happening as well as
          * using a Hex value I also use a try catch to catch the exception throuwn and create a message box that
-         * will give information on the error instead of crashing the program.*/
+         * will give information on the error instead of crashing the program. If the user is decrypting a file
+         * the result will be writen back to the file as well as a message to the user of the result.*/
         private string performRIJNDAELDecryption(string s, string k)
         {
             if (k.Length < keySizebit/8)
@@ -329,12 +368,33 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Please insure your Key is " + keySizebit/8 + " charters long");
                 return "";
             }
-            //Stores the text to be decrypted as well as the key provided as Ascii values.
+
+            //Switch used to check the type of data being decrypted, data can be a text string or a path to a file.
+            switch (dataTypeForEncrypt)
+            {
+                case Data_Type.TEXT:
+                    chipherBytes = StringToByteArray(s);
+                    break;
+                case Data_Type.FILE:
+                    path = s;
+                    try
+                    {
+                        chipherBytes = File.ReadAllBytes(path); /*Reads the data as bytes to an array from the file of the path
+                        * provided.*/
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Please enter a valid file path or insure the path is pointing to the correct file.");
+                        return "";
+                    }
+                    break;
+            }
+
             try
             {
-                chipherBytes = StringToByteArray(s);
+                //Stores the key provided as Ascii values.
                 desObj.Key = Encoding.ASCII.GetBytes(k);
-                System.IO.MemoryStream ms = new System.IO.MemoryStream(chipherBytes);
+                System.IO.MemoryStream ms = new System.IO.MemoryStream(chipherBytes); //creates a memory stream to store the result.
                 using (CryptoStream cs = new CryptoStream(ms, desObj.CreateDecryptor(), CryptoStreamMode.Read))
 
                 {
@@ -351,7 +411,18 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("ln:181" + e.ToString());
             }
 
-            s = Encoding.ASCII.GetString(plainbytes);
+            //Switch used to check the type of data being decrypted, data can be a text string or a path to a file.
+            switch (dataTypeForEncrypt)
+            {
+                case Data_Type.TEXT:
+                    s = ByteArrayToString(plainbytes); //Converts the bytes result to a string and returns it as the result.
+                    break;
+                case Data_Type.FILE:
+                    File.WriteAllBytes(path, plainbytes);
+                    s = "File decrypted."; //shows to the user that there file has been decrypted.
+                    break;
+            }
+
             return s;
         }
 
