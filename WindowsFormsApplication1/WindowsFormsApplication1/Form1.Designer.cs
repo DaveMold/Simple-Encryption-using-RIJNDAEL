@@ -42,7 +42,12 @@
             this.encryt_type = new System.Windows.Forms.Label();
             this.numUpDown_KeySize = new System.Windows.Forms.NumericUpDown();
             this.lb_KeySize = new System.Windows.Forms.Label();
+            this.lb_DataType = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.radbn_txtData = new System.Windows.Forms.RadioButton();
+            this.radbn_fileData = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDown_KeySize)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtb_output
@@ -220,12 +225,60 @@
             this.lb_KeySize.Text = "Key Size :";
             this.lb_KeySize.Click += new System.EventHandler(this.label3_Click);
             // 
+            // lb_DataType
+            // 
+            this.lb_DataType.AutoSize = true;
+            this.lb_DataType.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_DataType.Location = new System.Drawing.Point(163, 186);
+            this.lb_DataType.Name = "lb_DataType";
+            this.lb_DataType.Size = new System.Drawing.Size(100, 17);
+            this.lb_DataType.TabIndex = 14;
+            this.lb_DataType.Text = "Type of data";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.radbn_fileData);
+            this.panel1.Controls.Add(this.radbn_txtData);
+            this.panel1.Location = new System.Drawing.Point(269, 181);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(154, 22);
+            this.panel1.TabIndex = 15;
+            // 
+            // radbn_txtData
+            // 
+            this.radbn_txtData.AutoSize = true;
+            this.radbn_txtData.Checked = true;
+            this.radbn_txtData.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radbn_txtData.Location = new System.Drawing.Point(3, 3);
+            this.radbn_txtData.Name = "radbn_txtData";
+            this.radbn_txtData.Size = new System.Drawing.Size(60, 21);
+            this.radbn_txtData.TabIndex = 0;
+            this.radbn_txtData.TabStop = true;
+            this.radbn_txtData.Text = "Text";
+            this.radbn_txtData.UseVisualStyleBackColor = true;
+            this.radbn_txtData.CheckedChanged += new System.EventHandler(this.radbn_txtData_CheckedChanged);
+            // 
+            // radbn_fileData
+            // 
+            this.radbn_fileData.AutoSize = true;
+            this.radbn_fileData.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.radbn_fileData.Location = new System.Drawing.Point(69, 3);
+            this.radbn_fileData.Name = "radbn_fileData";
+            this.radbn_fileData.Size = new System.Drawing.Size(55, 21);
+            this.radbn_fileData.TabIndex = 1;
+            this.radbn_fileData.TabStop = true;
+            this.radbn_fileData.Text = "File";
+            this.radbn_fileData.UseVisualStyleBackColor = true;
+            this.radbn_fileData.CheckedChanged += new System.EventHandler(this.radbn_fileData_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumPurple;
             this.ClientSize = new System.Drawing.Size(434, 285);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.lb_DataType);
             this.Controls.Add(this.lb_KeySize);
             this.Controls.Add(this.numUpDown_KeySize);
             this.Controls.Add(this.encryt_type);
@@ -246,6 +299,8 @@
             this.Text = "Text Encrypter";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numUpDown_KeySize)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -267,6 +322,10 @@
         private System.Windows.Forms.Label encryt_type;
         private System.Windows.Forms.NumericUpDown numUpDown_KeySize;
         private System.Windows.Forms.Label lb_KeySize;
+        private System.Windows.Forms.Label lb_DataType;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RadioButton radbn_fileData;
+        private System.Windows.Forms.RadioButton radbn_txtData;
     }
 }
 

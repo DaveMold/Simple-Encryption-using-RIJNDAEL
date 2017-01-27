@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Security.Cryptography;
+using System.IO;
 
 namespace WindowsFormsApplication1
 {
@@ -16,13 +17,16 @@ namespace WindowsFormsApplication1
         //Public Vairbles
         byte encryptionTranslation = 4; //The amount the Ascii value is shifted by in the encrytion and decryption methods.
         int keySizebit = 128; //This stores the size of key required for the AES algorithims. The default values is the lowest bite value the key size can be set to.
-        string defaultInputTxt = "Please Enter the text you would like to encrypt..."; //The text that should be displayed to tell the user what they must do when starting the program.
+        string defaultInputTxtForTxt = "Please enter the text you would like to encrypt..."; //The text that should be displayed to tell the user what they must do when starting the program.
+        string defaultInputTxtForFile = "Please enter the file path of the file you would like to encrypt..."; //The text that should be displayed to tell the user what they must do when the file option is ticked.
         string defaultAESKeyTxt = " characters"; //The text that should be displayed to tell the user the lenght of the key required for AES.
         string defaultBasicKeyTxt = "No key is required."; //This is the text that will be displayed if there is no key required for the algorithim. eg Basic encryption.
         byte[] chipherBytes; //This will be used to store the data we have encrypted.
         byte[] plainbytes; //This will be used to store the plain text data. eg readable data.
         enum Encrption_type { BASIC, RIJNDAEL }; //This enum will be used to toggle the encryption type that should be used by the system to encrypt your data.
         Encrption_type encrypt_typ = Encrption_type.BASIC; //inisalises the vairble that will store which of the encryption types should be used.
+        enum Data_Type { TEXT, FILE }; //This will be used to toggle between encrypting files or raw text.
+        Data_Type dataTypeForEncrypt = Data_Type.TEXT; //inisalised to text as on program launch the data type for encryption is set to text.
         SymmetricAlgorithm desObj;
 
         public Form1()
@@ -36,7 +40,7 @@ namespace WindowsFormsApplication1
             //Sets up the event handler for the keyboard input on the input text box.
             this.Controls.Add(rtb_input);
             rtb_input.KeyPress += new KeyPressEventHandler(richTextBox1_KeyDown);
-            rtb_input.Text = defaultInputTxt; //Sets the default value for the input text box on launch.
+            rtb_input.Text = defaultInputTxtForTxt; //Sets the default value for the input text box on launch.
             txtB_key.Text = defaultBasicKeyTxt; //Sets the default value for the key text box on launch.
             numUpDown_KeySize.Enabled = false; /*As there is no need to set a key with the Basic encryption, the number up down txt box can be
             disabled until the user selects AES encryption.*/
@@ -57,26 +61,11 @@ namespace WindowsFormsApplication1
         public void richTextBox1_KeyDown(object sender, KeyPressEventArgs e)
         {
             //If when the user starts typeing the text box holds its default string then the string should be cleared before the users input is handled.
-            if (rtb_input.Text == defaultInputTxt)
+            if (rtb_input.Text == defaultInputTxtForTxt || rtb_input.Text == defaultInputTxtForFile)
             {
                 rtb_input.Clear();
                 return;
             }
-            ////If the users focus is on the input text box then check if the user has pressed the return key
-            //if (e.KeyChar == (char)Keys.Enter && rtb_input.Focused == true)
-            //{
-            //    //If the return key is press the output text box should be cleared so that the result of the encryption can be stored instead.
-            //    rtb_output.Clear();
-            //    switch (encrypt_typ)
-            //    {
-            //        case Encrption_type.AES:
-            //            rtb_output.Text += performAesEncryption(rtb_input.Text, txtB_key.Text);
-            //            break;
-            //        case Encrption_type.Basic:
-            //            rtb_output.Text += performBasicEncryption(rtb_input.Text);
-            //            break;
-            //    }
-            //}
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -90,27 +79,102 @@ namespace WindowsFormsApplication1
 
         }
 
-        //Performs a encription of the string that is passed to the method and returns the result as a string.
-        //Also checks if the string passed to the method is empty, if the string is empty then a error message box is displayed to prompt the user for a valid string.
+        /*Performs a encription of the string or file that is passed to the method and returns the result as a string or a message that the file has been encrypted.
+        * Also checks if the string passed to the method is empty, if the string is empty then a error message box is displayed to prompt the user for a valid string.
+        * As well as checking for a valid path for the file that is to be encrypted.*/
         private string performBasicEncryption(string s)
         {
-            //If the value to be ecnrypted is empty dont try and encrypt it show an error message.
-            if (s == "" || s == null)
+            string path = ""; //inisalises the path vairable.
+            List<byte> b = new List<byte>(); /*Creates a byte list for use to store the data for encryption. The reason
+            I require a list is that a vaible for use through out this method is needed but as I do not know the size of
+            the data I will have is not clear at this point so a list will allow me to change the size of the array as I need it.*/
+
+            //Switch used to check the type of data being encrypted, data can be a text string or a path to a file.
+            switch (dataTypeForEncrypt)
             {
-                MessageBox.Show("Please enter a valid entry!");
-                return "";
+                case Data_Type.TEXT:
+                    {
+                        //If the value to be ecnrypted is empty dont try and encrypt it show an error message.
+                        if (s == "" || s == null)
+                        {
+                            MessageBox.Show("Please enter a valid entry!");
+                            return "";
+                        }
+
+                        byte[] temp;
+                        temp = Encoding.ASCII.GetBytes(s); //Converts the string to an array of bytes that represent the chars Ascii value.
+                        /*Used to tranfer the data in the temp array that stores the data from the GetBytes method to the list 
+                         * I have for storing the data. */
+                        foreach (byte element in temp)
+                        {
+                            b.Add(element);
+                        }
+
+                        s = ""; //Clears the string before populating it with the result of the encyption.
+                    }
+                    break;
+                case Data_Type.FILE:
+                    {
+                        path = s;
+                        try
+                        {
+                            byte[] temp;
+                            temp = File.ReadAllBytes(path); /*Reads the data as bytes to an array from the file of the path
+                            provided.*/
+                            /*Used to tranfer the data in the temp array that stores the data from the GetBytes method to the list 
+                         * I have for storing the data. */
+                            foreach (byte element in temp)
+                            {
+                                b.Add(element);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Please enter a valid file path.");
+                            return "";
+                        }
+                    }
+                    break;
             }
-            byte[] b = Encoding.ASCII.GetBytes(s); //Converts the string to an array of bytes that represent the chars Ascii value.
-            s = ""; //Clears the string before populating it with the result of the encyption.
-            for (int i = 0; i < b.Length; i++)
+
+            switch (dataTypeForEncrypt)
             {
-                if (b[i] == 32)
-                    s += " ";
-                //Every second element in the array of bytes will have the encryption amount added to the ascii value appose to having the amount deducted on every other element. 
-                else if ((i % 2) == 0)
-                    s += Convert.ToChar(b[i] + encryptionTranslation); //Deducts the encryption translation amount from the ascii value stored in the byte array and stores it in the result string.
-                else
-                    s += Convert.ToChar(b[i] - encryptionTranslation); //Adds the encryption translation amount to the ascii value stored in the byte array and stores it in the result string.
+                case Data_Type.TEXT:
+                    {
+                        for (int i = 0; i < b.Count; i++)
+                        {
+                            //Leaves the spaces alone.
+                            if (b[i] == 32)
+                                s += " ";
+                            //Every second element in the array of bytes will have the encryption amount added to the ascii value appose to having the amount deducted on every other element. 
+                            else if ((i % 2) == 0)
+                                s += Convert.ToChar(b[i] + encryptionTranslation); //Deducts the encryption translation amount from the ascii value stored in the byte array and stores it in the result string.
+                            else
+                                s += Convert.ToChar(b[i] - encryptionTranslation); //Adds the encryption translation amount to the ascii value stored in the byte array and stores it in the result string.
+                        }
+                    }
+                    break;
+                case Data_Type.FILE:
+                    {
+                        for (int i = 0; i < b.Count; i++)
+                        {
+                            //Every second element in the array of bytes will have the bytes offset on every other element. 
+                            if ((i % 2) == 0)
+                                b[i]++; //Offsetting the bytes read from the file.
+                            else
+                                b[i]--; //Offsets the bytes read from the file.
+                        }
+                        //write to file.
+                        //As the writting to the file requires the data in an array we must populate the array from the list of bytes.
+                        byte[] temp = new byte[b.Count];
+                        for (int i = 0; i < b.Count; i++)
+                        {
+                            temp[i] = b[i];
+                        }
+                        File.WriteAllBytes(path, temp);
+                        s = "File encrypted."; //shows to the user that there file has been encrypted.
+                    }
+                    break;
             }
             return s;
         }
@@ -152,8 +216,9 @@ namespace WindowsFormsApplication1
             return s;
         }
 
-        //Performs a decryption of the string that is passed to the method and returns the result as a string.
-        //Also checks if the string passed to the method is empty, if the string is empty then a error message box is displayed to prompt the user for a valid string.
+        /*Performs a decryption of the string that is passed to the method and returns the result as a string.
+        * Also checks if the string passed to the method is empty, if the string is empty then a error message box is displayed to prompt the user for a valid string.
+        * As well as checking for a valid path for the file that is to be decrypted.*/
         private string performBasicDecryption(string s)
         {
             //If the value to be decrypted is empty dont try and decrypt it show an error message.
@@ -162,22 +227,86 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Please enter a valid entry!");
                 return "";
             }
-            Byte[] b = new byte[s.Length]; //Declairs an array of bytes to use to store the encrypted string at the lenght of the string in question.
-            for (int i = 0; i < s.Length; i++)
+
+            List<byte> b = new List<byte>(); /*Creates a list to store the bytes from the data as at this point the size of the 
+            * array needed is unclear, but the vairble will be required throughout the method.*/
+            string path = "";
+
+            switch (dataTypeForEncrypt)
             {
-                b[i] = Convert.ToByte(s[i]); //Converts each element of the string to store it as an element in the byte array.
+                case Data_Type.TEXT:
+                    {
+                        for (int i = 0; i < s.Length; i++)
+                        {
+                            b[i] = Convert.ToByte(s[i]); //Converts each element of the string to store it as an element in the byte array.
+                        }
+                        s = ""; //Clears the string before populating it with the relust of the decryption.
+                    }
+                    break;
+                case Data_Type.FILE:
+                    {
+                        path = s; //The string of the path is stored for collection and populating to and from the file.
+                        try
+                        {
+                            /*A temp vairble is required as ReadAllBytes method requrns an array, the temp array will 
+                            * then need to be transfered to the list that sorts the data within the scope of this method. */
+                            byte[] temp;
+                            temp = File.ReadAllBytes(path);
+                            foreach (byte element in temp)
+                            {
+                                b.Add(element);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Please enter a valid file path.");
+                            return "";
+                        }
+                    }
+                    break;
             }
-            s = ""; //Clears the string before populating it with the relust of the decryption.
-            for (int i = 0; i < b.Length; i++)
+
+            switch (dataTypeForEncrypt)
             {
-                if (b[i] == 32)
-                    s += " ";
-                //Every second element in the array of bytes will have the encryption amount deducted to the ascii value appose to having the amount added on every other element. 
-                else if ((i % 2) == 0)
-                    s += Convert.ToChar(b[i] - encryptionTranslation); //Deducts the encryption translation amount from the ascii value stored in the byte array and stores it in the result string.
-                else
-                    s += Convert.ToChar(b[i] + encryptionTranslation); //Deducts the encryption translation amount from the ascii value stored in the byte array and stores it in the result string.
+                case Data_Type.TEXT:
+                    {
+
+                        for (int i = 0; i < b.Count; i++)
+                        {
+                            if (b[i] == 32)
+                                s += " ";
+                            //Every second element in the array of bytes will have the encryption amount deducted to the ascii value appose to having the amount added on every other element. 
+                            else if ((i % 2) == 0)
+                                s += Convert.ToChar(b[i] - encryptionTranslation); //Deducts the encryption translation amount from the ascii value stored in the byte array and stores it in the result string.
+                            else
+                                s += Convert.ToChar(b[i] + encryptionTranslation); //Deducts the encryption translation amount from the ascii value stored in the byte array and stores it in the result string.
+                        }
+                    }
+                    break;
+                case Data_Type.FILE:
+                    {
+                        for (int i = 0; i < b.Count; i++)
+                        {
+                            //Every second element in the array of bytes will have the bytes shifted to decrypted the data of every element. 
+                            if ((i % 2) == 0)
+                                b[i]--; //Offsets the bytes to decrypt the data.
+                            else
+                                b[i]++; //Offsets the bytes to decrypt the data.
+                        }
+                        //write to file.
+                        /*Again the data must be stored in a temp array in order to be used by the WriteAllBytes method that expects 
+                         * an array not a list.*/
+                        byte[] temp = new byte[b.Count];
+                        for (int i = 0; i < b.Count; i++)
+                        {
+                            temp[i] = b[i];
+                        }
+                        File.WriteAllBytes(path, temp);
+                        s = "File decrypted.";//A message is returned to the user of the success senario.
+                    }
+                    break;
             }
+
             return s;
         }
 
@@ -292,11 +421,6 @@ namespace WindowsFormsApplication1
             encrypt_typ = Encrption_type.RIJNDAEL;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         //Convers an array of bytes to a string of Hex values.
         private static string ByteArrayToString(byte[] ba)
         {
@@ -339,6 +463,18 @@ namespace WindowsFormsApplication1
         {
             keySizebit = Convert.ToInt32(8 * n);
             txtB_key.MaxLength = Convert.ToInt32(n);
+        }
+
+        private void radbn_txtData_CheckedChanged(object sender, EventArgs e)
+        {
+            rtb_input.Text = defaultInputTxtForTxt;
+            dataTypeForEncrypt = Data_Type.TEXT;
+        }
+
+        private void radbn_fileData_CheckedChanged(object sender, EventArgs e)
+        {
+            rtb_input.Text = defaultInputTxtForFile;
+            dataTypeForEncrypt = Data_Type.FILE;
         }
     }
 }
