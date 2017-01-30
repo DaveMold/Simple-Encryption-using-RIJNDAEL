@@ -56,7 +56,7 @@
             // 
             this.rtb_output.BackColor = System.Drawing.Color.CornflowerBlue;
             this.rtb_output.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtb_output.Location = new System.Drawing.Point(12, 206);
+            this.rtb_output.Location = new System.Drawing.Point(12, 240);
             this.rtb_output.Name = "rtb_output";
             this.rtb_output.ReadOnly = true;
             this.rtb_output.Size = new System.Drawing.Size(410, 68);
@@ -90,7 +90,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 186);
+            this.label2.Location = new System.Drawing.Point(12, 220);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(90, 17);
             this.label2.TabIndex = 3;
@@ -99,7 +99,7 @@
             // bt_encrypt
             // 
             this.bt_encrypt.AccessibleName = "bt_encrypt";
-            this.bt_encrypt.Location = new System.Drawing.Point(12, 152);
+            this.bt_encrypt.Location = new System.Drawing.Point(357, 118);
             this.bt_encrypt.Name = "bt_encrypt";
             this.bt_encrypt.Size = new System.Drawing.Size(66, 31);
             this.bt_encrypt.TabIndex = 4;
@@ -109,7 +109,7 @@
             // 
             // bt_Decrypt
             // 
-            this.bt_Decrypt.Location = new System.Drawing.Point(84, 152);
+            this.bt_Decrypt.Location = new System.Drawing.Point(284, 118);
             this.bt_Decrypt.Name = "bt_Decrypt";
             this.bt_Decrypt.Size = new System.Drawing.Size(67, 31);
             this.bt_Decrypt.TabIndex = 5;
@@ -130,7 +130,7 @@
             // txtB_key
             // 
             this.txtB_key.BackColor = System.Drawing.Color.GreenYellow;
-            this.txtB_key.Location = new System.Drawing.Point(148, 122);
+            this.txtB_key.Location = new System.Drawing.Point(148, 151);
             this.txtB_key.MaxLength = 16;
             this.txtB_key.Name = "txtB_key";
             this.txtB_key.ReadOnly = true;
@@ -143,7 +143,7 @@
             // 
             this.lb_Key.AutoSize = true;
             this.lb_Key.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_Key.Location = new System.Drawing.Point(102, 125);
+            this.lb_Key.Location = new System.Drawing.Point(97, 152);
             this.lb_Key.Name = "lb_Key";
             this.lb_Key.Size = new System.Drawing.Size(45, 17);
             this.lb_Key.TabIndex = 8;
@@ -154,7 +154,7 @@
             this.radbtn_basicEncrypt.AutoSize = true;
             this.radbtn_basicEncrypt.Checked = true;
             this.radbtn_basicEncrypt.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radbtn_basicEncrypt.Location = new System.Drawing.Point(355, 159);
+            this.radbtn_basicEncrypt.Location = new System.Drawing.Point(338, 182);
             this.radbtn_basicEncrypt.Name = "radbtn_basicEncrypt";
             this.radbtn_basicEncrypt.Size = new System.Drawing.Size(68, 21);
             this.radbtn_basicEncrypt.TabIndex = 9;
@@ -167,7 +167,7 @@
             // 
             this.radbtn_AesEncryt.AutoSize = true;
             this.radbtn_AesEncryt.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radbtn_AesEncryt.Location = new System.Drawing.Point(290, 159);
+            this.radbtn_AesEncryt.Location = new System.Drawing.Point(272, 182);
             this.radbtn_AesEncryt.Name = "radbtn_AesEncryt";
             this.radbtn_AesEncryt.Size = new System.Drawing.Size(59, 21);
             this.radbtn_AesEncryt.TabIndex = 10;
@@ -179,11 +179,11 @@
             // 
             this.encryt_type.AutoSize = true;
             this.encryt_type.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.encryt_type.Location = new System.Drawing.Point(163, 161);
+            this.encryt_type.Location = new System.Drawing.Point(130, 184);
             this.encryt_type.Name = "encryt_type";
-            this.encryt_type.Size = new System.Drawing.Size(121, 17);
+            this.encryt_type.Size = new System.Drawing.Size(136, 17);
             this.encryt_type.TabIndex = 11;
-            this.encryt_type.Text = "Encryption type";
+            this.encryt_type.Text = "Encryption type  :";
             // 
             // numUpDown_KeySize
             // 
@@ -194,7 +194,7 @@
             0,
             0,
             0});
-            this.numUpDown_KeySize.Location = new System.Drawing.Point(365, 123);
+            this.numUpDown_KeySize.Location = new System.Drawing.Point(365, 152);
             this.numUpDown_KeySize.Maximum = new decimal(new int[] {
             32,
             0,
@@ -220,7 +220,7 @@
             // 
             this.lb_KeySize.AutoSize = true;
             this.lb_KeySize.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_KeySize.Location = new System.Drawing.Point(278, 125);
+            this.lb_KeySize.Location = new System.Drawing.Point(278, 154);
             this.lb_KeySize.Name = "lb_KeySize";
             this.lb_KeySize.Size = new System.Drawing.Size(81, 17);
             this.lb_KeySize.TabIndex = 13;
@@ -231,17 +231,17 @@
             // 
             this.lb_DataType.AutoSize = true;
             this.lb_DataType.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_DataType.Location = new System.Drawing.Point(163, 186);
+            this.lb_DataType.Location = new System.Drawing.Point(156, 211);
             this.lb_DataType.Name = "lb_DataType";
-            this.lb_DataType.Size = new System.Drawing.Size(100, 17);
+            this.lb_DataType.Size = new System.Drawing.Size(110, 17);
             this.lb_DataType.TabIndex = 14;
-            this.lb_DataType.Text = "Type of data";
+            this.lb_DataType.Text = "Type of data :";
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.radbn_fileData);
             this.panel1.Controls.Add(this.radbn_txtData);
-            this.panel1.Location = new System.Drawing.Point(269, 181);
+            this.panel1.Location = new System.Drawing.Point(269, 206);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(154, 22);
             this.panel1.TabIndex = 15;
@@ -275,13 +275,13 @@
             // 
             // bn_BrousePath
             // 
-            this.bn_BrousePath.Location = new System.Drawing.Point(347, 94);
+            this.bn_BrousePath.Enabled = false;
+            this.bn_BrousePath.Location = new System.Drawing.Point(102, 118);
             this.bn_BrousePath.Name = "bn_BrousePath";
-            this.bn_BrousePath.Size = new System.Drawing.Size(75, 23);
+            this.bn_BrousePath.Size = new System.Drawing.Size(75, 31);
             this.bn_BrousePath.TabIndex = 16;
-            this.bn_BrousePath.Text = "Brouse";
+            this.bn_BrousePath.Text = "Browse";
             this.bn_BrousePath.UseVisualStyleBackColor = true;
-            this.bn_BrousePath.Visible = false;
             this.bn_BrousePath.Click += new System.EventHandler(this.bn_BrousePath_Click);
             // 
             // openFileDialog1
@@ -294,7 +294,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumPurple;
-            this.ClientSize = new System.Drawing.Size(434, 285);
+            this.ClientSize = new System.Drawing.Size(434, 320);
             this.Controls.Add(this.bn_BrousePath);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lb_DataType);
