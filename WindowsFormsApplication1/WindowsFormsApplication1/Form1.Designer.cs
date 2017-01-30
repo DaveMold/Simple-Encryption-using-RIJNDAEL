@@ -48,6 +48,7 @@
             this.radbn_txtData = new System.Windows.Forms.RadioButton();
             this.bn_BrousePath = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.chkbx_CopyFile = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDown_KeySize)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -109,7 +110,7 @@
             // 
             // bt_Decrypt
             // 
-            this.bt_Decrypt.Location = new System.Drawing.Point(284, 118);
+            this.bt_Decrypt.Location = new System.Drawing.Point(292, 118);
             this.bt_Decrypt.Name = "bt_Decrypt";
             this.bt_Decrypt.Size = new System.Drawing.Size(67, 31);
             this.bt_Decrypt.TabIndex = 5;
@@ -119,7 +120,7 @@
             // 
             // bt_resetTxtb
             // 
-            this.bt_resetTxtb.Location = new System.Drawing.Point(12, 118);
+            this.bt_resetTxtb.Location = new System.Drawing.Point(10, 118);
             this.bt_resetTxtb.Name = "bt_resetTxtb";
             this.bt_resetTxtb.Size = new System.Drawing.Size(84, 31);
             this.bt_resetTxtb.TabIndex = 6;
@@ -276,7 +277,7 @@
             // bn_BrousePath
             // 
             this.bn_BrousePath.Enabled = false;
-            this.bn_BrousePath.Location = new System.Drawing.Point(102, 118);
+            this.bn_BrousePath.Location = new System.Drawing.Point(92, 118);
             this.bn_BrousePath.Name = "bn_BrousePath";
             this.bn_BrousePath.Size = new System.Drawing.Size(75, 31);
             this.bn_BrousePath.TabIndex = 16;
@@ -289,12 +290,27 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
+            // chkbx_CopyFile
+            // 
+            this.chkbx_CopyFile.AutoSize = true;
+            this.chkbx_CopyFile.Checked = true;
+            this.chkbx_CopyFile.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkbx_CopyFile.Enabled = false;
+            this.chkbx_CopyFile.Location = new System.Drawing.Point(181, 123);
+            this.chkbx_CopyFile.Name = "chkbx_CopyFile";
+            this.chkbx_CopyFile.Size = new System.Drawing.Size(105, 21);
+            this.chkbx_CopyFile.TabIndex = 17;
+            this.chkbx_CopyFile.Text = "BackUp File";
+            this.chkbx_CopyFile.UseVisualStyleBackColor = true;
+            this.chkbx_CopyFile.CheckedChanged += new System.EventHandler(this.chkbx_CopyFile_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumPurple;
             this.ClientSize = new System.Drawing.Size(434, 320);
+            this.Controls.Add(this.chkbx_CopyFile);
             this.Controls.Add(this.bn_BrousePath);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lb_DataType);
@@ -347,6 +363,7 @@
         private System.Windows.Forms.RadioButton radbn_txtData;
         private System.Windows.Forms.Button bn_BrousePath;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.CheckBox chkbx_CopyFile;
     }
 }
 

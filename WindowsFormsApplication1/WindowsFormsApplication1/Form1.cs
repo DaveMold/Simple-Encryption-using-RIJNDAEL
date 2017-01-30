@@ -24,6 +24,7 @@ namespace WindowsFormsApplication1
         byte[] chipherBytes; //This will be used to store the data we have encrypted.
         byte[] plainbytes; //This will be used to store the plain text data. eg readable data.
         string path = ""; //inisalises the path vairable for the encryption of a file.
+        bool copyFile = true; //If the user has checked copy file then when encrypting the file a secound file will be created as a back up.
         enum Encrption_type { BASIC, RIJNDAEL }; //This enum will be used to toggle the encryption type that should be used by the system to encrypt your data.
         Encrption_type encrypt_typ = Encrption_type.BASIC; //inisalises the vairble that will store which of the encryption types should be used.
         enum Data_Type { TEXT, FILE }; //This will be used to toggle between encrypting files or raw text.
@@ -116,7 +117,8 @@ namespace WindowsFormsApplication1
                 case Data_Type.FILE:
                     {
                         path = s;
-                        copy_File(path); /*This Will create a copy of the file you wish to encrypt so that you do not loose your data if you 
+                        if(copyFile)
+                            copy_File(path); /*This Will create a copy of the file you wish to encrypt so that you do not loose your data if you 
                         * have had an issue with the encryption or have lost your key.*/
                         try
                         {
@@ -216,7 +218,8 @@ namespace WindowsFormsApplication1
                     break;
                 case Data_Type.FILE:
                     path = s;
-                    copy_File(path);/*This Will create a copy of the file you wish to encrypt so that you do not loose your data if you 
+                    if(copyFile)
+                        copy_File(path);/*This Will create a copy of the file you wish to encrypt so that you do not loose your data if you 
                     * have had an issue with the encryption or have lost your key.*/
                     try
                     {
@@ -543,6 +546,7 @@ namespace WindowsFormsApplication1
         private void radbn_txtData_CheckedChanged(object sender, EventArgs e)
         {
             bn_BrousePath.Enabled = false;
+            chkbx_CopyFile.Enabled = false;
             rtb_input.Text = defaultInputTxtForTxt;
             dataTypeForEncrypt = Data_Type.TEXT;
         }
@@ -550,6 +554,7 @@ namespace WindowsFormsApplication1
         private void radbn_fileData_CheckedChanged(object sender, EventArgs e)
         {
             bn_BrousePath.Enabled = true;
+            chkbx_CopyFile.Enabled = true;
             rtb_input.Text = defaultInputTxtForFile;
             dataTypeForEncrypt = Data_Type.FILE;
         }
@@ -589,11 +594,24 @@ namespace WindowsFormsApplication1
             try
             {
                 System.IO.File.Copy(path, str_newPath);
-                //rtb_output.Text = "Copy of File made.\n";
+                rtb_output.Text = "Copy of File made.\n";
             }
             catch (Exception e)
             {
                 MessageBox.Show("Please insure you have not already got a file at the Path you provided named (YourFileName Copy . extention). " + e.Message);
+            }
+        }
+
+        private void chkbx_CopyFile_CheckedChanged(object sender, EventArgs e)
+        {
+            switch (chkbx_CopyFile.CheckState)
+            {
+                case CheckState.Checked:
+                    copyFile = true;
+                    break;
+                case CheckState.Unchecked:
+                    copyFile = false;
+                    break;
             }
         }
     }
