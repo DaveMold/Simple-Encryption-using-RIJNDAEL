@@ -116,6 +116,8 @@ namespace WindowsFormsApplication1
                 case Data_Type.FILE:
                     {
                         path = s;
+                        copy_File(path); /*This Will create a copy of the file you wish to encrypt so that you do not loose your data if you 
+                        * have had an issue with the encryption or have lost your key.*/
                         try
                         {
                             byte[] temp;
@@ -214,6 +216,8 @@ namespace WindowsFormsApplication1
                     break;
                 case Data_Type.FILE:
                     path = s;
+                    copy_File(path);/*This Will create a copy of the file you wish to encrypt so that you do not loose your data if you 
+                    * have had an issue with the encryption or have lost your key.*/
                     try
                     {
                         plainbytes = File.ReadAllBytes(path); /*Reads the data as bytes to an array from the file of the path
@@ -558,6 +562,38 @@ namespace WindowsFormsApplication1
         private void bn_BrousePath_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog();
+        }
+
+        //This will Amend "Copy" to the end of the files name and then re-add the extention before creating a copy of a file.
+        private void copy_File(string path)
+        {
+            char[] newPath = path.ToArray();
+            string str_newPath = "";
+
+            int size = path.Length;
+            newPath[size - 4] = Convert.ToChar("C");
+            newPath[size - 3] = Convert.ToChar("o");
+            newPath[size - 2] = Convert.ToChar("p");
+            newPath[size - 1] = Convert.ToChar("y");
+
+            foreach (char c in newPath)
+            {
+                str_newPath += c;
+            }
+
+            for (int i = 0; i < path.Length; i++)
+            {
+                if (i >= path.Length - 4)
+                    str_newPath += path[i];
+            }
+            try
+            {
+                System.IO.File.Copy(path, str_newPath);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Please insure you have not already got a file at the Path you provided named (YourFileName Copy . extention). " + e.Message);
+            }
         }
     }
 }
