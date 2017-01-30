@@ -279,7 +279,7 @@ namespace WindowsFormsApplication1
                     {
                         for (int i = 0; i < s.Length; i++)
                         {
-                            b[i] = Convert.ToByte(s[i]); //Converts each element of the string to store it as an element in the byte array.
+                            b.Add(Convert.ToByte(s[i])); //Converts each element of the string to store it as an element in the byte array.
                         }
                         s = ""; //Clears the string before populating it with the relust of the decryption.
                     }
@@ -419,7 +419,7 @@ namespace WindowsFormsApplication1
             switch (dataTypeForEncrypt)
             {
                 case Data_Type.TEXT:
-                    s = ByteArrayToString(plainbytes); //Converts the bytes result to a string and returns it as the result.
+                    s = Encoding.ASCII.GetString(plainbytes); //Converts the bytes result to a string and returns it as the result.
                     break;
                 case Data_Type.FILE:
                     File.WriteAllBytes(path, plainbytes);
@@ -452,10 +452,10 @@ namespace WindowsFormsApplication1
             switch (encrypt_typ)
             {
                 case Encrption_type.RIJNDAEL:
-                    rtb_output.Text += performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text);
+                    rtb_output.Text = performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text);
                     break;
                 case Encrption_type.BASIC:
-                    rtb_output.Text += performBasicDecryption(rtb_input.Text);
+                    rtb_output.Text = performBasicDecryption(rtb_input.Text);
                     break;
             }
         }
@@ -589,6 +589,7 @@ namespace WindowsFormsApplication1
             try
             {
                 System.IO.File.Copy(path, str_newPath);
+                //rtb_output.Text = "Copy of File made.\n";
             }
             catch (Exception e)
             {
