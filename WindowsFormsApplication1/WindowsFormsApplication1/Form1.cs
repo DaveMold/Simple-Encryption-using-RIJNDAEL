@@ -34,18 +34,24 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
-            desObj = Rijndael.Create();
-            desObj.KeySize = keySizebit; //Sets the key size that the AES algorithims will expect when encrypting or decrypting data.
-            desObj.Mode = CipherMode.CBC; /*This type of encryption will insure that even if the text contains to of the same letters 
-            beside each other it will still be encrypted as to values in the end to prevent a hit to the data contained for a malious attack. */
-            desObj.Padding = PaddingMode.Zeros; //This will pad the data with "0" until the data can be stored as multiples of 16.
-            //Sets up the event handler for the keyboard input on the input text box.
+            InaliseDesObj();
             this.Controls.Add(rtb_input);
             rtb_input.KeyPress += new KeyPressEventHandler(richTextBox1_KeyDown);
             rtb_input.Text = defaultInputTxtForTxt; //Sets the default value for the input text box on launch.
             txtB_key.Text = defaultBasicKeyTxt; //Sets the default value for the key text box on launch.
             numUpDown_KeySize.Enabled = false; /*As there is no need to set a key with the Basic encryption, the number up down txt box can be
             disabled until the user selects AES encryption.*/
+        }
+
+        private void InaliseDesObj()
+        {
+            desObj = Rijndael.Create();
+            desObj.IV = new byte[] { 1, 8, 6, 3, 2, 5, 7, 8, 2, 4, 8, 9, 6, 2, 5, 9 };
+            desObj.KeySize = keySizebit; //Sets the key size that the AES algorithims will expect when encrypting or decrypting data.
+            desObj.Mode = CipherMode.CBC; /*This type of encryption will insure that even if the text contains to of the same letters 
+            beside each other it will still be encrypted as to values in the end to prevent a hit to the data contained for a malious attack. */
+            desObj.Padding = PaddingMode.Zeros; //This will pad the data with "0" until the data can be stored as multiples of 16.
+            //Sets up the event handler for the keyboard input on the input text box.
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -204,6 +210,7 @@ namespace WindowsFormsApplication1
          * and a result message will be displaied to the user.*/
         private string performRIJNDAELEncryption(string s, string k)
         {
+            //InaliseDesObj();
             if (k.Length < keySizebit/8)
             {
                 MessageBox.Show("Please insure your Key is " + keySizebit/8 + " charters long");
@@ -370,6 +377,7 @@ namespace WindowsFormsApplication1
          * the result will be writen back to the file as well as a message to the user of the result.*/
         private string performRIJNDAELDecryption(string s, string k)
         {
+            //InaliseDesObj();
             if (k.Length < keySizebit/8)
             {
                 MessageBox.Show("Please insure your Key is " + keySizebit/8 + " charters long");
