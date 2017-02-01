@@ -18,9 +18,11 @@ namespace WindowsFormsApplication1
         byte encryptionTranslation = 4; //The amount the Ascii value is shifted by in the encrytion and decryption methods.
         int keySizebit = 128; //This stores the size of key required for the AES algorithims. The default values is the lowest bite value the key size can be set to.
         string defaultInputTxtForTxt = "Please enter the text you would like to encrypt..."; //The text that should be displayed to tell the user what they must do when starting the program.
-        string defaultInputTxtForFile = "Please enter the file path of the file you would like to encrypt..."; //The text that should be displayed to tell the user what they must do when the file option is ticked.
+        string defaultInputTxtForFile = "Please enter the file path of the file you would like to encrypt..."; /*The text that should be displayed to tell the user what they must do when 
+        * the file option is ticked.*/
         string defaultAESKeyTxt = " characters"; //The text that should be displayed to tell the user the lenght of the key required for AES.
         string defaultBasicKeyTxt = "No key is required."; //This is the text that will be displayed if there is no key required for the algorithim. eg Basic encryption.
+        string defaultIVTxt = "Default IV"; //This is used to fill the IV text box that the user may opt to set there own IV.
         byte[] chipherBytes; //This will be used to store the data we have encrypted.
         byte[] plainbytes; //This will be used to store the plain text data. eg readable data.
         string path = ""; //inisalises the path vairable for the encryption of a file.
@@ -30,23 +32,31 @@ namespace WindowsFormsApplication1
         enum Data_Type { TEXT, FILE }; //This will be used to toggle between encrypting files or raw text.
         Data_Type dataTypeForEncrypt = Data_Type.TEXT; //inisalised to text as on program launch the data type for encryption is set to text.
         SymmetricAlgorithm desObj;
+        bool useDefaultIV = true; //Defines weater or not the user has chosen to use there own IV or to use a default value set by the application.
+        byte[] defaultIV = new byte[] { 1, 8, 6, 3, 2, 5, 7, 8, 2, 4, 8, 9, 6, 2, 5, 9 }; //Default IV to be used if not defined by the system.
 
         public Form1()
         {
             InitializeComponent();
             InaliseDesObj();
             this.Controls.Add(rtb_input);
+            this.Controls.Add(txtB_key);
+            this.Controls.Add(txtbx_IV);
             rtb_input.KeyPress += new KeyPressEventHandler(richTextBox1_KeyDown);
+            txtB_key.KeyPress += new KeyPressEventHandler(txtB_key_KeyDown);
+            txtbx_IV.KeyPress += new KeyPressEventHandler(txtbx_IV_KeyDown);
             rtb_input.Text = defaultInputTxtForTxt; //Sets the default value for the input text box on launch.
             txtB_key.Text = defaultBasicKeyTxt; //Sets the default value for the key text box on launch.
+            txtbx_IV.Text = defaultIVTxt; //Sets the default value for the IV text box on launch.
             numUpDown_KeySize.Enabled = false; /*As there is no need to set a key with the Basic encryption, the number up down txt box can be
             disabled until the user selects AES encryption.*/
         }
 
+        //Sets up the type of encryption as well as the key peramiters and padding type for the encryption algoithim.
         private void InaliseDesObj()
         {
             desObj = Rijndael.Create();
-            desObj.IV = new byte[] { 1, 8, 6, 3, 2, 5, 7, 8, 2, 4, 8, 9, 6, 2, 5, 9 };
+            desObj.IV = defaultIV;
             desObj.KeySize = keySizebit; //Sets the key size that the AES algorithims will expect when encrypting or decrypting data.
             desObj.Mode = CipherMode.CBC; /*This type of encryption will insure that even if the text contains to of the same letters 
             beside each other it will still be encrypted as to values in the end to prevent a hit to the data contained for a malious attack. */
@@ -140,7 +150,7 @@ namespace WindowsFormsApplication1
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Please enter a valid file path or insure the path is pointing to the correct file.");
+                            MessageBox.Show("Please enter a valid file path or insure the path is pointing to the correct file.\n" + ex.Message);
                             return "";
                         }
                     }
@@ -208,14 +218,21 @@ namespace WindowsFormsApplication1
          * result in errors when trying to decrypt the corupted data.
          * If the file encryption is used the data will be writen back to the file
          * and a result message will be displaied to the user.*/
-        private string performRIJNDAELEncryption(string s, string k)
+        private string performRIJNDAELEncryption(string s, string k, byte[] iv)
         {
-            //InaliseDesObj();
             if (k.Length < keySizebit/8)
             {
                 MessageBox.Show("Please insure your Key is " + keySizebit/8 + " charters long");
                 return "";
             }
+
+            if (iv.Length < 16)
+            {
+                MessageBox.Show("Please insure your IV is 16 charters long");
+                return "";
+            }
+            else
+                desObj.IV = iv;
 
             //Switch used to check the type of data being encrypted, data can be a text string or a path to a file.
             switch (dataTypeForEncrypt)
@@ -235,7 +252,7 @@ namespace WindowsFormsApplication1
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Please enter a valid file path or insure the path is pointing to the correct file.");
+                        MessageBox.Show("Please enter a valid file path or insure the path is pointing to the correct file.\n" + ex.Message);
                         return "";
                     }
                     break;
@@ -310,7 +327,7 @@ namespace WindowsFormsApplication1
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Please enter a valid file path.");
+                            MessageBox.Show("Please enter a valid file path.\n" + ex.Message);
                             return "";
                         }
                     }
@@ -358,7 +375,6 @@ namespace WindowsFormsApplication1
                     }
                     break;
             }
-
             return s;
         }
 
@@ -375,14 +391,23 @@ namespace WindowsFormsApplication1
          * using a Hex value I also use a try catch to catch the exception throuwn and create a message box that
          * will give information on the error instead of crashing the program. If the user is decrypting a file
          * the result will be writen back to the file as well as a message to the user of the result.*/
-        private string performRIJNDAELDecryption(string s, string k)
+        private string performRIJNDAELDecryption(string s, string k, byte[] iv)
         {
-            //InaliseDesObj();
             if (k.Length < keySizebit/8)
             {
                 MessageBox.Show("Please insure your Key is " + keySizebit/8 + " charters long");
                 return "";
             }
+
+
+            if (iv.Length < 16)
+            {
+                MessageBox.Show("Please insure your IV is 16 charters long");
+                return "";
+            }
+            else
+                desObj.IV = iv;
+           
 
             //Switch used to check the type of data being decrypted, data can be a text string or a path to a file.
             switch (dataTypeForEncrypt)
@@ -399,7 +424,7 @@ namespace WindowsFormsApplication1
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Please enter a valid file path or insure the path is pointing to the correct file.");
+                        MessageBox.Show("Please enter a valid file path or insure the path is pointing to the correct file.\n" + ex.Message);
                         return "";
                     }
                     break;
@@ -448,7 +473,20 @@ namespace WindowsFormsApplication1
             switch (encrypt_typ)
             {
                 case Encrption_type.RIJNDAEL:
-                    rtb_output.Text += performRIJNDAELEncryption(rtb_input.Text, txtB_key.Text);
+                    if (useDefaultIV)
+                        rtb_output.Text += performRIJNDAELEncryption(rtb_input.Text, txtB_key.Text, defaultIV);
+                    else
+                    {
+                        string t = txtbx_IV.Text;
+                        byte[] temp = new byte[t.Length];
+                        int i = 0;
+                        foreach (char c in t)
+                        {
+                            temp[i] = (byte)c;
+                            i++;
+                        }
+                        rtb_output.Text += performRIJNDAELEncryption(rtb_input.Text, txtB_key.Text, temp);
+                    }
                     break;
                 case Encrption_type.BASIC:
                     rtb_output.Text += performBasicEncryption(rtb_input.Text);
@@ -463,7 +501,20 @@ namespace WindowsFormsApplication1
             switch (encrypt_typ)
             {
                 case Encrption_type.RIJNDAEL:
-                    rtb_output.Text = performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text);
+                    if (useDefaultIV)
+                        rtb_output.Text = performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text, defaultIV);
+                    else
+                    {
+                        string t = txtbx_IV.Text;
+                        byte[] temp = new byte[t.Length];
+                        int i = 0;
+                        foreach (char c in t)
+                        {
+                            temp[i] = (byte)c;
+                            i++;
+                        }
+                        rtb_output.Text = performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text, temp);
+                    }
                     break;
                 case Encrption_type.BASIC:
                     rtb_output.Text = performBasicDecryption(rtb_input.Text);
@@ -483,6 +534,16 @@ namespace WindowsFormsApplication1
         {
         }
 
+        private void txtB_key_KeyDown(object sender, KeyPressEventArgs e)
+        {
+            //If when the user starts typeing the text box holds its default string then the string should be cleared before the users input is handled.
+            if (txtB_key.Text == defaultBasicKeyTxt || txtB_key.Text == defaultAESKeyTxt)
+            {
+                txtB_key.Clear();
+                return;
+            }
+        }
+
         private void radbtn_basicEncrypt_CheckedChanged(object sender, EventArgs e)
         {
             /*With the Basic encryption there is no need for a key the number up down text box
@@ -492,6 +553,7 @@ namespace WindowsFormsApplication1
             txtB_key.ReadOnly = true;
             txtB_key.Text = defaultBasicKeyTxt;
             encrypt_typ = Encrption_type.BASIC;
+            chbx_UseIV.Enabled = false;
         }
 
         private void radbtn_AesEncryt_CheckedChanged(object sender, EventArgs e)
@@ -505,6 +567,7 @@ namespace WindowsFormsApplication1
             //In order to convert the key size from bits to an int value we must devied the value by 8.
             txtB_key.Text = (keySizebit/8) + defaultAESKeyTxt;
             encrypt_typ = Encrption_type.RIJNDAEL;
+            chbx_UseIV.Enabled = true;
         }
 
         //Convers an array of bytes to a string of Hex values.
@@ -621,6 +684,51 @@ namespace WindowsFormsApplication1
                     copyFile = false;
                     break;
             }
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void lb_DataType_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtbx_IV_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        public void txtbx_IV_KeyDown(object sender, KeyPressEventArgs e)
+        {
+            //If when the user starts typeing the text box holds its default string then the string should be cleared before the users input is handled.
+            if (txtbx_IV.Text == defaultIVTxt)
+            {
+                txtbx_IV.Clear();
+                return;
+            }
+        }
+
+        private void chbx_UseIV_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbx_UseIV.Checked)
+            {
+                txtbx_IV.Enabled = false;
+                useDefaultIV = true;
+            }
+            else
+            {
+                txtbx_IV.Text = defaultIVTxt;
+                txtbx_IV.Enabled = true;
+                useDefaultIV = false;
+            }
+        }
+
+        private void encryt_type_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
