@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.rtb_output = new System.Windows.Forms.RichTextBox();
             this.rtb_input = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -83,27 +84,28 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(234, 17);
+            this.label1.Size = new System.Drawing.Size(274, 18);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Text for Encryption/Decryption ";
+            this.label1.Text = "Text/File for Encryption/Decryption ";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(12, 220);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(90, 17);
+            this.label2.Size = new System.Drawing.Size(56, 18);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Result Text";
+            this.label2.Text = "Result";
             // 
             // bt_encrypt
             // 
             this.bt_encrypt.AccessibleName = "bt_encrypt";
+            this.bt_encrypt.Cursor = System.Windows.Forms.Cursors.Hand;
             this.bt_encrypt.Location = new System.Drawing.Point(85, 118);
             this.bt_encrypt.Name = "bt_encrypt";
             this.bt_encrypt.Size = new System.Drawing.Size(66, 31);
@@ -114,6 +116,7 @@
             // 
             // bt_Decrypt
             // 
+            this.bt_Decrypt.Cursor = System.Windows.Forms.Cursors.Hand;
             this.bt_Decrypt.Location = new System.Drawing.Point(12, 118);
             this.bt_Decrypt.Name = "bt_Decrypt";
             this.bt_Decrypt.Size = new System.Drawing.Size(67, 31);
@@ -124,6 +127,7 @@
             // 
             // bt_resetTxtb
             // 
+            this.bt_resetTxtb.Cursor = System.Windows.Forms.Cursors.Hand;
             this.bt_resetTxtb.Location = new System.Drawing.Point(157, 118);
             this.bt_resetTxtb.Name = "bt_resetTxtb";
             this.bt_resetTxtb.Size = new System.Drawing.Size(84, 31);
@@ -158,6 +162,7 @@
             // 
             this.radbtn_basicEncrypt.AutoSize = true;
             this.radbtn_basicEncrypt.Checked = true;
+            this.radbtn_basicEncrypt.Cursor = System.Windows.Forms.Cursors.Hand;
             this.radbtn_basicEncrypt.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radbtn_basicEncrypt.Location = new System.Drawing.Point(368, 182);
             this.radbtn_basicEncrypt.Name = "radbtn_basicEncrypt";
@@ -171,6 +176,7 @@
             // radbtn_AesEncryt
             // 
             this.radbtn_AesEncryt.AutoSize = true;
+            this.radbtn_AesEncryt.Cursor = System.Windows.Forms.Cursors.Hand;
             this.radbtn_AesEncryt.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radbtn_AesEncryt.Location = new System.Drawing.Point(302, 182);
             this.radbtn_AesEncryt.Name = "radbtn_AesEncryt";
@@ -194,7 +200,7 @@
             // numUpDown_KeySize
             // 
             this.numUpDown_KeySize.BackColor = System.Drawing.Color.GreenYellow;
-            this.numUpDown_KeySize.Cursor = System.Windows.Forms.Cursors.Default;
+            this.numUpDown_KeySize.Cursor = System.Windows.Forms.Cursors.Hand;
             this.numUpDown_KeySize.Increment = new decimal(new int[] {
             16,
             0,
@@ -257,6 +263,7 @@
             // radbn_fileData
             // 
             this.radbn_fileData.AutoSize = true;
+            this.radbn_fileData.Cursor = System.Windows.Forms.Cursors.Hand;
             this.radbn_fileData.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radbn_fileData.Location = new System.Drawing.Point(69, 3);
             this.radbn_fileData.Name = "radbn_fileData";
@@ -271,6 +278,7 @@
             // 
             this.radbn_txtData.AutoSize = true;
             this.radbn_txtData.Checked = true;
+            this.radbn_txtData.Cursor = System.Windows.Forms.Cursors.Hand;
             this.radbn_txtData.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radbn_txtData.Location = new System.Drawing.Point(3, 3);
             this.radbn_txtData.Name = "radbn_txtData";
@@ -283,6 +291,7 @@
             // 
             // bn_BrousePath
             // 
+            this.bn_BrousePath.Cursor = System.Windows.Forms.Cursors.Hand;
             this.bn_BrousePath.Enabled = false;
             this.bn_BrousePath.Location = new System.Drawing.Point(242, 118);
             this.bn_BrousePath.Name = "bn_BrousePath";
@@ -302,6 +311,7 @@
             this.chkbx_CopyFile.AutoSize = true;
             this.chkbx_CopyFile.Checked = true;
             this.chkbx_CopyFile.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkbx_CopyFile.Cursor = System.Windows.Forms.Cursors.Hand;
             this.chkbx_CopyFile.Enabled = false;
             this.chkbx_CopyFile.Location = new System.Drawing.Point(12, 154);
             this.chkbx_CopyFile.Name = "chkbx_CopyFile";
@@ -316,6 +326,7 @@
             this.chbx_UseIV.AutoSize = true;
             this.chbx_UseIV.Checked = true;
             this.chbx_UseIV.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbx_UseIV.Cursor = System.Windows.Forms.Cursors.Hand;
             this.chbx_UseIV.Enabled = false;
             this.chbx_UseIV.Location = new System.Drawing.Point(12, 170);
             this.chbx_UseIV.Name = "chbx_UseIV";
@@ -334,7 +345,6 @@
             this.txtbx_IV.Name = "txtbx_IV";
             this.txtbx_IV.Size = new System.Drawing.Size(91, 22);
             this.txtbx_IV.TabIndex = 19;
-            this.txtbx_IV.UseWaitCursor = true;
             this.txtbx_IV.TextChanged += new System.EventHandler(this.txtbx_IV_TextChanged);
             // 
             // lb_IV
@@ -375,8 +385,10 @@
             this.Controls.Add(this.rtb_input);
             this.Controls.Add(this.rtb_output);
             this.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Opacity = 0.9D;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Text Encrypter";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numUpDown_KeySize)).EndInit();

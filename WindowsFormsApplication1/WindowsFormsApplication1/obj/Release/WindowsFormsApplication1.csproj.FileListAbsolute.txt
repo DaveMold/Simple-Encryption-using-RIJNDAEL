@@ -6,4 +6,3 @@ C:\Users\10150005\documents\visual studio 2015\Projects\WindowsFormsApplication1
 C:\Users\10150005\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.csproj.GenerateResource.Cache
 C:\Users\10150005\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.exe
 C:\Users\10150005\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.pdb
-C:\Users\10150005\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
