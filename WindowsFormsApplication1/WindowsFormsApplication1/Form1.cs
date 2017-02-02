@@ -527,7 +527,11 @@ namespace WindowsFormsApplication1
         {
             rtb_input.Clear(); //Clears the input text box of any text when the reset butten is clicked.
             if (encrypt_typ == Encrption_type.RIJNDAEL)
+            {
                 txtB_key.Clear(); //Clears the key text box of any text when the clear text butten is clicked.
+                if (!useDefaultIV)
+                    txtbx_IV.Clear();
+            }
         }
 
         private void txtB_key_TextChanged(object sender, EventArgs e)
@@ -715,12 +719,12 @@ namespace WindowsFormsApplication1
         {
             if (chbx_UseIV.Checked)
             {
+                txtbx_IV.Text = defaultIVTxt;
                 txtbx_IV.Enabled = false;
                 useDefaultIV = true;
             }
             else
             {
-                txtbx_IV.Text = defaultIVTxt;
                 txtbx_IV.Enabled = true;
                 useDefaultIV = false;
             }
