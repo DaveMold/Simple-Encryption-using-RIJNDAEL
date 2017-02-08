@@ -25,7 +25,8 @@ namespace WindowsFormsApplication1
         string defaultIVTxt = "Default IV"; //This is used to fill the IV text box that the user may opt to set there own IV.
         byte[] chipherBytes; //This will be used to store the data we have encrypted.
         byte[] plainbytes; //This will be used to store the plain text data. eg readable data.
-        string path = ""; //inisalises the path vairable for the encryption of a file.
+        string path = ""; //Inisalises the path vairable for the encryption of a file.
+        List<string> paths = new List<string>(); //Stores the path of the file the user wants to encrypt, if the user selects multiple files then each path will be stored as an element in the list.
         bool copyFile = true; //If the user has checked copy file then when encrypting the file a secound file will be created as a back up.
         enum Encrption_type { BASIC, RIJNDAEL }; //This enum will be used to toggle the encryption type that should be used by the system to encrypt your data.
         Encrption_type encrypt_typ = Encrption_type.BASIC; //inisalises the vairble that will store which of the encryption types should be used.
@@ -193,7 +194,7 @@ namespace WindowsFormsApplication1
                             temp[i] = b[i];
                         }
                         File.WriteAllBytes(path, temp);
-                        s = "File encrypted."; //shows to the user that there file has been encrypted.
+                        s = "File encrypted.\n"; //shows to the user that there file has been encrypted.
                     }
                     break;
             }
@@ -214,7 +215,7 @@ namespace WindowsFormsApplication1
          * be converted to Hex before it can be output in a text box for the user. If
          * the data is not converted to Hex then the data will be compramised when it
          * is output in the text box because not all ascii values when convered back
-         *  to a string can be displayed in a text box. This will corupt the data and 
+         * to a string can be displayed in a text box. This will corupt the data and 
          * result in errors when trying to decrypt the corupted data.
          * If the file encryption is used the data will be writen back to the file
          * and a result message will be displaied to the user.*/
@@ -276,7 +277,7 @@ namespace WindowsFormsApplication1
                     break;
                 case Data_Type.FILE:
                     File.WriteAllBytes(path, chipherBytes);
-                    s = "File encrypted."; //shows to the user that there file has been encrypted.
+                    s = "File encrypted.\n"; //shows to the user that there file has been encrypted.
                     break;
             }
            
@@ -371,7 +372,7 @@ namespace WindowsFormsApplication1
                             temp[i] = b[i];
                         }
                         File.WriteAllBytes(path, temp);
-                        s = "File decrypted.";//A message is returned to the user of the success senario.
+                        s = "File decrypted.\n";//A message is returned to the user of the success senario.
                     }
                     break;
             }
@@ -459,7 +460,7 @@ namespace WindowsFormsApplication1
                     break;
                 case Data_Type.FILE:
                     File.WriteAllBytes(path, plainbytes);
-                    s = "File decrypted."; //shows to the user that there file has been decrypted.
+                    s = "File decrypted.\n"; //shows to the user that there file has been decrypted.
                     break;
             }
 
@@ -473,10 +474,26 @@ namespace WindowsFormsApplication1
             switch (encrypt_typ)
             {
                 case Encrption_type.RIJNDAEL:
+                    /*If the user dose not wish to enter there own IV the default IV is used for the encryption. If the 
+                    * user dose chose to enter there own IV it will be passed to the encryption method and checked
+                    * for issues that could be presented.*/
                     if (useDefaultIV)
-                        rtb_output.Text += performRIJNDAELEncryption(rtb_input.Text, txtB_key.Text, defaultIV);
+                    {
+                        if (!openFileDialog1.Multiselect)
+                            rtb_output.Text += performRIJNDAELEncryption(rtb_input.Text, txtB_key.Text, defaultIV);
+                        else
+                        {
+                            rtb_output.Clear();
+                            foreach (string p in paths)
+                            {
+                                rtb_output.Text += performRIJNDAELEncryption(p, txtB_key.Text, defaultIV);
+                            }
+                        }
+                    }
                     else
                     {
+                        /*This will cycle through the string from the IV feild convering each char to a byte and updating
+                        * the byte array. The byte array is then passed to the encryption method. */
                         string t = txtbx_IV.Text;
                         byte[] temp = new byte[t.Length];
                         int i = 0;
@@ -485,11 +502,29 @@ namespace WindowsFormsApplication1
                             temp[i] = (byte)c;
                             i++;
                         }
-                        rtb_output.Text += performRIJNDAELEncryption(rtb_input.Text, txtB_key.Text, temp);
+                        if (!openFileDialog1.Multiselect)
+                            rtb_output.Text += performRIJNDAELEncryption(rtb_input.Text, txtB_key.Text, temp);
+                        else
+                        {
+                            rtb_output.Clear();
+                            foreach (string p in paths)
+                            {
+                                rtb_output.Text += performRIJNDAELEncryption(p, txtB_key.Text, temp);
+                            }
+                        }
                     }
                     break;
                 case Encrption_type.BASIC:
-                    rtb_output.Text += performBasicEncryption(rtb_input.Text);
+                    if (!openFileDialog1.Multiselect)
+                        rtb_output.Text += performBasicEncryption(rtb_input.Text);
+                    else
+                    {
+                        rtb_output.Clear();
+                        foreach (string p in paths)
+                        {
+                            rtb_output.Text += performBasicEncryption(p);
+                        }
+                    }
                     break;
             }
         }
@@ -501,10 +536,27 @@ namespace WindowsFormsApplication1
             switch (encrypt_typ)
             {
                 case Encrption_type.RIJNDAEL:
+                    /*If the user dose not wish to enter there own IV the default IV is used for the decryption. If the 
+                    * user dose chose to enter there own IV it will be passed to the decryption method and checked
+                    * for issues that could be presented.*/
                     if (useDefaultIV)
-                        rtb_output.Text = performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text, defaultIV);
+                    {
+                        if (!openFileDialog1.Multiselect)
+                            rtb_output.Text = performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text, defaultIV);
+                        else
+                        {
+                            rtb_output.Clear();
+                            foreach (string p in paths)
+                            {
+                                rtb_output.Text += performRIJNDAELDecryption(p, txtB_key.Text, defaultIV);
+                            }
+                        }
+                    }
                     else
                     {
+                        /*This will cycle through the string taken from the IV feild, each char will be convered to 
+                         * a byte value and be stored in the temp byte array. Once the byte array is populated it is
+                         * passed to the decryption method.*/
                         string t = txtbx_IV.Text;
                         byte[] temp = new byte[t.Length];
                         int i = 0;
@@ -513,11 +565,29 @@ namespace WindowsFormsApplication1
                             temp[i] = (byte)c;
                             i++;
                         }
-                        rtb_output.Text = performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text, temp);
+                        if (!openFileDialog1.Multiselect)
+                            rtb_output.Text = performRIJNDAELDecryption(rtb_input.Text, txtB_key.Text, temp);
+                        else
+                        {
+                            rtb_output.Clear();
+                            foreach (string p in paths)
+                            {
+                                rtb_output.Text += performRIJNDAELDecryption(p, txtB_key.Text, temp);
+                            }
+                        }
                     }
                     break;
                 case Encrption_type.BASIC:
-                    rtb_output.Text = performBasicDecryption(rtb_input.Text);
+                    if (!openFileDialog1.Multiselect)
+                        rtb_output.Text = performBasicDecryption(rtb_input.Text);
+                    else
+                    {
+                        rtb_output.Clear();
+                        foreach (string p in paths)
+                        {
+                            rtb_output.Text += performBasicDecryption(p);
+                        }
+                    }
                     break;
             }
         }
@@ -541,7 +611,7 @@ namespace WindowsFormsApplication1
         private void txtB_key_KeyDown(object sender, KeyPressEventArgs e)
         {
             //If when the user starts typeing the text box holds its default string then the string should be cleared before the users input is handled.
-            if (txtB_key.Text == defaultBasicKeyTxt || txtB_key.Text == defaultAESKeyTxt)
+            if (txtB_key.Text == defaultBasicKeyTxt || txtB_key.Text == (keySizebit / 8) + defaultAESKeyTxt)
             {
                 txtB_key.Clear();
                 return;
@@ -555,6 +625,7 @@ namespace WindowsFormsApplication1
              * that explains the requirements of the key can be set to the keys text boxs text.*/
             numUpDown_KeySize.Enabled = false;
             txtB_key.ReadOnly = true;
+            txtB_key.Enabled = false;
             txtB_key.Text = defaultBasicKeyTxt;
             encrypt_typ = Encrption_type.BASIC;
             chbx_UseIV.Enabled = false;
@@ -568,6 +639,7 @@ namespace WindowsFormsApplication1
              * of the key required will be until the user enters his or her key.*/
             numUpDown_KeySize.Enabled = true;
             txtB_key.ReadOnly = false;
+            txtB_key.Enabled = true;
             //In order to convert the key size from bits to an int value we must devied the value by 8.
             txtB_key.Text = (keySizebit/8) + defaultAESKeyTxt;
             encrypt_typ = Encrption_type.RIJNDAEL;
@@ -620,6 +692,7 @@ namespace WindowsFormsApplication1
 
         private void radbn_txtData_CheckedChanged(object sender, EventArgs e)
         {
+            chBx_MultiSelect.Enabled = false;
             bn_BrousePath.Enabled = false;
             chkbx_CopyFile.Enabled = false;
             rtb_input.Text = defaultInputTxtForTxt;
@@ -628,6 +701,7 @@ namespace WindowsFormsApplication1
 
         private void radbn_fileData_CheckedChanged(object sender, EventArgs e)
         {
+            chBx_MultiSelect.Enabled = true;
             bn_BrousePath.Enabled = true;
             chkbx_CopyFile.Enabled = true;
             rtb_input.Text = defaultInputTxtForFile;
@@ -636,11 +710,29 @@ namespace WindowsFormsApplication1
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            rtb_input.Text = openFileDialog1.InitialDirectory + openFileDialog1.FileName;
+            if (openFileDialog1.Multiselect)
+            {
+                rtb_input.Clear();
+                paths.Capacity = openFileDialog1.FileNames.Length;
+                foreach (string n in openFileDialog1.FileNames)
+                {
+                    rtb_input.Text += n + "\n";
+                    paths.Add(n);
+                }
+            }
+            else
+            {
+                rtb_input.Text = openFileDialog1.FileName;
+            }
         }
 
         private void bn_BrousePath_Click(object sender, EventArgs e)
         {
+            if (chBx_MultiSelect.Checked)
+                openFileDialog1.Multiselect = true;
+            else
+                openFileDialog1.Multiselect = false;
+
             openFileDialog1.ShowDialog();
         }
 

@@ -53,6 +53,7 @@
             this.chbx_UseIV = new System.Windows.Forms.CheckBox();
             this.txtbx_IV = new System.Windows.Forms.TextBox();
             this.lb_IV = new System.Windows.Forms.Label();
+            this.chBx_MultiSelect = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDown_KeySize)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -357,12 +358,24 @@
             this.lb_IV.TabIndex = 20;
             this.lb_IV.Text = "IV :";
             // 
+            // chBx_MultiSelect
+            // 
+            this.chBx_MultiSelect.AutoSize = true;
+            this.chBx_MultiSelect.Enabled = false;
+            this.chBx_MultiSelect.Location = new System.Drawing.Point(311, 124);
+            this.chBx_MultiSelect.Name = "chBx_MultiSelect";
+            this.chBx_MultiSelect.Size = new System.Drawing.Size(121, 21);
+            this.chBx_MultiSelect.TabIndex = 21;
+            this.chBx_MultiSelect.Text = "Select Multiple";
+            this.chBx_MultiSelect.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MediumPurple;
             this.ClientSize = new System.Drawing.Size(448, 320);
+            this.Controls.Add(this.chBx_MultiSelect);
             this.Controls.Add(this.lb_IV);
             this.Controls.Add(this.txtbx_IV);
             this.Controls.Add(this.chbx_UseIV);
@@ -425,6 +438,7 @@
         private System.Windows.Forms.CheckBox chbx_UseIV;
         private System.Windows.Forms.TextBox txtbx_IV;
         private System.Windows.Forms.Label lb_IV;
+        private System.Windows.Forms.CheckBox chBx_MultiSelect;
     }
 }
 
