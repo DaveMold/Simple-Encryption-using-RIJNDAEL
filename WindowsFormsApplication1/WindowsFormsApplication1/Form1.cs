@@ -194,7 +194,7 @@ namespace WindowsFormsApplication1
                             temp[i] = b[i];
                         }
                         File.WriteAllBytes(path, temp);
-                        s = "File encrypted.\n"; //shows to the user that there file has been encrypted.
+                        s = getFileNameFromPath(path) + " File encrypted.\n"; //shows to the user that there file has been encrypted.
                     }
                     break;
             }
@@ -277,7 +277,7 @@ namespace WindowsFormsApplication1
                     break;
                 case Data_Type.FILE:
                     File.WriteAllBytes(path, chipherBytes);
-                    s = "File encrypted.\n"; //shows to the user that there file has been encrypted.
+                    s = getFileNameFromPath(path) + " File encrypted.\n"; //shows to the user that there file has been encrypted.
                     break;
             }
            
@@ -372,7 +372,7 @@ namespace WindowsFormsApplication1
                             temp[i] = b[i];
                         }
                         File.WriteAllBytes(path, temp);
-                        s = "File decrypted.\n";//A message is returned to the user of the success senario.
+                        s = getFileNameFromPath(path) + " File decrypted.\n";//A message is returned to the user of the success senario.
                     }
                     break;
             }
@@ -460,7 +460,7 @@ namespace WindowsFormsApplication1
                     break;
                 case Data_Type.FILE:
                     File.WriteAllBytes(path, plainbytes);
-                    s = "File decrypted.\n"; //shows to the user that there file has been decrypted.
+                    s = getFileNameFromPath(path) + " File decrypted.\n"; //shows to the user that there file has been decrypted.
                     break;
             }
 
@@ -590,6 +590,25 @@ namespace WindowsFormsApplication1
                     }
                     break;
             }
+        }
+
+        //Strips the path of the folder higharky leaving just the file name.
+        private string getFileNameFromPath(string path)
+        {
+            int lastIndex = 0, index = 0;
+            /*Loops through the path looking for the \ char counting each char as I pass through,
+            * when the last of the \ chars are found the value is stored in the lastIndex vairble.
+            * The lastIndex value is then used to strip the path of the folder details.*/
+            foreach (char c in path)
+            {
+                index++;
+                if (c == '\\')
+                {
+                    lastIndex = index;
+                }
+            }
+
+            return path.Substring(lastIndex);
         }
 
         //Clears the input and key text boxs of any data.
